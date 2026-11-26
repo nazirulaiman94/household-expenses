@@ -98,7 +98,7 @@ export function QuickAdd({ onClose, onSaved, month, title = 'New entry' }: { onC
             inputMode="decimal"
             autoComplete="off"
             placeholder="0.00"
-            autoFocus
+            autoFocus={!!onClose}
             aria-invalid={amountError ? true : undefined}
             aria-describedby={`${id}-amount-help`}
             className="num"

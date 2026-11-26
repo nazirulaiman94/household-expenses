@@ -7,8 +7,14 @@ import { money } from '../lib/money'
 import { totalsFor } from '../lib/stats'
 
 /** The homepage: pick a month, add an entry to it, then land on that month's overview. */
+function greeting() {
+  const h = new Date().getHours()
+  return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'
+}
+const firstName = (n: string) => n.trim().split(/\s+/)[0] || 'there'
+
 export function Home() {
-  const { household } = useApp()
+  const { household, me } = useApp()
   const cur = household.currency
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
@@ -23,10 +29,39 @@ export function Home() {
 
   return (
     <div className="home">
-      <div className="home__head">
-        <h1>Add an entry</h1>
-        <p className="muted">Pick the month it belongs to, then fill in the amount.</p>
-      </div>
+      <section className="hero" aria-labelledby="hero-h">
+        <svg className="hero__art" viewBox="0 0 400 220" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
+          <path d="M0 190 C 60 170, 90 120, 150 128 S 240 70, 290 80 S 360 30, 400 20" />
+          <path d="M0 210 C 70 196, 110 160, 170 162 S 260 118, 310 120 S 370 82, 400 74" />
+          <circle cx="290" cy="80" r="5" />
+          <circle cx="400" cy="20" r="5" />
+        </svg>
+        <p className="hero__hello">{greeting()}, {firstName(me.name)}</p>
+        <h1 id="hero-h" className="visually-hidden">Add an entry</h1>
+        <Loaded load={load} what={formatMonth(month)} rows={1}>
+          {(entries) => {
+            const t = totalsFor(entries, month)
+            return (
+              <>
+                <p className="hero__label">Left over in {formatMonth(month)}</p>
+                <p className={`hero__figure num${t.saved < 0 ? ' is-negative' : ''}`}>{money(t.saved, cur)}</p>
+                <dl className="hero__split">
+                  <div>
+                    <dt>Came in</dt>
+                    <dd className="num">{money(t.income, cur)}</dd>
+                  </div>
+                  <div>
+                    <dt>Went out</dt>
+                    <dd className="num">{money(t.spent, cur)}</dd>
+                  </div>
+                </dl>
+                {!entries.length && <p className="hero__note">Nothing recorded for this month yet.</p>}
+              </>
+            )
+          }}
+        </Loaded>
+        <Link to={overviewHref} className="hero__link">See the overview</Link>
+      </section>
 
       <div className="home__month">
         <div className="tabs" role="group" aria-label="Month">
@@ -57,33 +92,6 @@ export function Home() {
         }}
       />
 
-      <section className="home__month-summary" aria-labelledby="home-sum-h">
-        <h2 id="home-sum-h">{formatMonth(month)} so far</h2>
-        <Loaded load={load} what={formatMonth(month)} rows={1}>
-          {(entries) => {
-            const t = totalsFor(entries, month)
-            return entries.length ? (
-              <dl className="home__totals">
-                <div>
-                  <dt>Came in</dt>
-                  <dd className="num">{money(t.income, cur)}</dd>
-                </div>
-                <div>
-                  <dt>Went out</dt>
-                  <dd className="num">{money(t.spent, cur)}</dd>
-                </div>
-                <div>
-                  <dt>Left over</dt>
-                  <dd className={`num${t.saved < 0 ? ' is-negative' : ''}`}>{money(t.saved, cur)}</dd>
-                </div>
-              </dl>
-            ) : (
-              <p className="muted">Nothing recorded yet.</p>
-            )
-          }}
-        </Loaded>
-        <Link to={overviewHref}>See the {formatMonth(month)} overview</Link>
-      </section>
     </div>
   )
 }
