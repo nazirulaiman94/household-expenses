@@ -133,7 +133,17 @@ export function Overview() {
                       label={month === thisMonth ? "This month's spending" : `Spent in ${formatMonth(month, 'short')}`}
                       slices={spendByCategory(monthEntries, categories, month).map((u) => ({ name: u.category.name, amount: u.spent }))}
                     />
-                    <h3 className="sheet__sub">Budgets</h3>
+                  </>
+                )}
+              </section>
+
+              {monthEntries.length > 0 && (
+                <>
+                  <section className="sheet" aria-labelledby="bud-h">
+                    <div className="sheet__head">
+                      <h2 id="bud-h">Budgets</h2>
+                      <Link to="/budgets" className="small">Edit budgets</Link>
+                    </div>
                     {budgeted.length === 0 ? (
                       <EmptyState action={<Link to="/budgets">Set monthly budgets</Link>}>No category has a monthly budget yet.</EmptyState>
                     ) : (
@@ -185,9 +195,12 @@ export function Overview() {
                       </table>
                     )}
 
-                    <div className="sheet__sub-row">
-                      <h3 className="sheet__sub">Latest entries</h3>
-                      <Link to={`/entries${month === thisMonth ? '' : `?m=${month}`}`}>All entries for {formatMonth(month, 'short')}</Link>
+                  </section>
+
+                  <section className="sheet" aria-labelledby="latest-h">
+                    <div className="sheet__head">
+                      <h2 id="latest-h">Latest entries</h2>
+                      <Link to={`/entries${month === thisMonth ? '' : `?m=${month}`}`} className="small">All entries for {formatMonth(month, 'short')}</Link>
                     </div>
                     <table className="table">
                       <thead>
@@ -214,9 +227,9 @@ export function Overview() {
                         ))}
                       </tbody>
                     </table>
-                  </>
-                )}
-              </section>
+                  </section>
+                </>
+              )}
 
               {month === thisMonth && <DueList due={dueSoon(recurring)} alerts={budgetAlerts(uses)} />}
 

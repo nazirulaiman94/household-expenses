@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type PointerEvent } from 'react'
 import { money } from '../lib/money'
 
 /** Categorical slots in fixed order (validated palette); "Other" is neutral grey. */
@@ -12,7 +12,12 @@ export interface Slice {
 
 /** A ring showing how this month's spending splits across categories, with a legend that carries every figure. */
 export function SpendRing({ slices, currency, label }: { slices: Slice[]; currency: string; label: string }) {
-  const [hover, setHover] = useState<number | null>(null)
+  const [hovered, setHovered] = useState<number | null>(null)
+  const [picked, setPicked] = useState<number | null>(null)
+  const hover = hovered ?? picked
+  const toggle = (i: number) => setPicked((p) => (p === i ? null : i))
+  const mouseIn = (i: number) => (e: PointerEvent) => e.pointerType === 'mouse' && setHovered(i)
+  const mouseOut = () => setHovered(null)
   const sorted = slices.filter((s) => s.amount > 0).sort((a, b) => b.amount - a.amount)
   const top = sorted.slice(0, SLOTS.length)
   const rest = sorted.slice(SLOTS.length)
@@ -52,9 +57,9 @@ export function SpendRing({ slices, currency, label }: { slices: Slice[]; curren
                   strokeDashoffset={-offset}
                   transform="rotate(-90 100 100)"
                   className={`ring__seg${hover !== null && hover !== i ? ' is-dim' : ''}`}
-                  onPointerEnter={() => setHover(i)}
-                  onPointerLeave={() => setHover(null)}
-                  onClick={() => setHover((h) => (h === i ? null : i))}
+                  onPointerEnter={mouseIn(i)}
+                  onPointerLeave={mouseOut}
+                  onClick={() => toggle(i)}
                 >
                   <title>{`${p.name}: ${money(p.amount, currency)} (${Math.round((p.amount / total) * 100)}%)`}</title>
                 </circle>
@@ -63,19 +68,24 @@ export function SpendRing({ slices, currency, label }: { slices: Slice[]; curren
               return el
             })}
           </svg>
+          {picked !== null && (
+            <button type="button" className="ring__reset" onClick={() => setPicked(null)} aria-label="Show all categories" />
+          )}
           <div className="ring__centre" aria-hidden="true">
             <span className="ring__centre-label">{active ? active.name : label}</span>
             <span className="ring__centre-figure num">{money(active ? active.amount : total, currency)}</span>
             {active && <span className="ring__centre-share num">{((active.amount / total) * 100).toFixed(1)}%</span>}
+            {picked !== null && <span className="ring__centre-hint">Tap again to show all</span>}
           </div>
         </div>
         <ul className="ring__legend">
           {parts.map((p, i) => (
             <li
               key={p.name}
-              className={hover !== null && hover !== i ? 'is-dim' : ''}
-              onPointerEnter={() => setHover(i)}
-              onPointerLeave={() => setHover(null)}
+              className={`${hover !== null && hover !== i ? 'is-dim' : ''}${picked === i ? ' is-picked' : ''}`}
+              onPointerEnter={mouseIn(i)}
+              onPointerLeave={mouseOut}
+              onClick={() => toggle(i)}
             >
               <span className="ring__dot" style={{ background: p.color }} aria-hidden="true" />
               <span className="ring__name">{p.name}</span>

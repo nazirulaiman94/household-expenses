@@ -504,3 +504,9 @@ input[type="date"]::-webkit-date-and-time-value { line-height: calc(var(--field-
   .ring__chart { max-width: 15.5rem; }
   .ring__legend li { grid-template-columns: 12px minmax(0, 1fr) auto 2.8rem; }
 }
+.ring__legend li { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ring__legend li.is-picked .ring__name { font-weight: 600; }
+.ring__reset { position: absolute; inset: 26%; border-radius: 50%; border: 0; background: transparent; cursor: pointer; z-index: 1; -webkit-tap-highlight-color: transparent; }
+.ring__centre-hint { font-size: var(--text-xs); color: var(--color-muted); margin-top: 2px; }
+.ring__seg { -webkit-tap-highlight-color: transparent; outline: none; }
+.sheet__head a { white-space: nowrap; }
