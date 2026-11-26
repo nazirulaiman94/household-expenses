@@ -16,7 +16,7 @@ interface DemoState {
   goals: Goal[]
 }
 
-const KEY = 'household-expenses:demo:v2'
+const KEY = 'household-expenses:demo:v3'
 let memory: DemoState | null = null
 
 const uid = () => Math.random().toString(36).slice(2, 10)
@@ -99,6 +99,7 @@ export function seedState(): DemoState {
   ]
 
   const goals: Goal[] = [
+    { id: 'g0', name: 'First RM 50,000', target: 50000, targetDate: null },
     { id: 'g1', name: 'Emergency fund', target: 70000, targetDate: `${addMonths(thisMonth, 6)}-01` },
     { id: 'g2', name: 'House deposit', target: 180000, targetDate: `${addMonths(thisMonth, 24)}-01` },
   ]

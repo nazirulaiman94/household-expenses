@@ -228,7 +228,7 @@ export function Savings() {
                             <td className="num hide-s">{money(o.remaining, cur, 0)}</td>
                             <td>
                               {o.monthsAtRate === 0
-                                ? 'Reached'
+                                ? <span className="paid-mark">Reached</span>
                                 : o.reachedOn
                                   ? `${formatMonth(o.reachedOn, 'short')}${o.onTrack === false ? ', late' : o.onTrack ? ', on time' : ''}`
                                   : 'Not at this rate'}

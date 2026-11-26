@@ -66,12 +66,16 @@ export function LineChart({ points, format, marks = [], every = 1, dashedFrom, t
             <text className="chart__tick" x={PAD.left - 10} y={y(v)} dy="0.32em" textAnchor="end">{format(v)}</text>
           </g>
         ))}
-        {marks.map((m) => (
-          <g key={m.label}>
-            <line className="chart__mark" x1={PAD.left} x2={W - PAD.right} y1={y(m.value)} y2={y(m.value)} />
-            <text className="chart__mark-label" x={W - PAD.right} y={y(m.value) - 6} textAnchor="end">{m.label}</text>
-          </g>
-        ))}
+        {[...marks].sort((a, b) => b.value - a.value).map((m, i, arr) => {
+          // Alternate close labels to the left edge so they never overprint.
+          const crowded = i > 0 && Math.abs(y(arr[i - 1].value) - y(m.value)) < 16
+          return (
+            <g key={m.label}>
+              <line className="chart__mark" x1={PAD.left} x2={W - PAD.right} y1={y(m.value)} y2={y(m.value)} />
+              <text className="chart__mark-label" x={crowded ? PAD.left + 6 : W - PAD.right} y={y(m.value) - 6} textAnchor={crowded ? 'start' : 'end'}>{m.label}</text>
+            </g>
+          )
+        })}
         <path className="chart__series" d={path(0, split)} vectorEffect="non-scaling-stroke" />
         {dashedFrom !== undefined && <path className="chart__series chart__series--projected" d={path(split, points.length - 1)} vectorEffect="non-scaling-stroke" />}
         {points.map((p, i) =>
