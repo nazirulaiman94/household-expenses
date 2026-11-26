@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-do
 import { DueList } from '../components/DueList'
 import { LineChart } from '../components/LineChart'
 import { QuickAdd } from '../components/QuickAdd'
+import { SpendRing } from '../components/SpendRing'
 import { EmptyState, Loaded } from '../components/States'
 import { useApp, useLoad } from '../lib/context'
 import { addMonths, formatDay, formatMonth, monthKey, monthRange, today } from '../lib/dates'
@@ -127,6 +128,11 @@ export function Overview() {
                   </EmptyState>
                 ) : (
                   <>
+                    <SpendRing
+                      currency={cur}
+                      label={month === thisMonth ? "This month's spending" : `Spent in ${formatMonth(month, 'short')}`}
+                      slices={spendByCategory(monthEntries, categories, month).map((u) => ({ name: u.category.name, amount: u.spent }))}
+                    />
                     <h3 className="sheet__sub">Budgets</h3>
                     {budgeted.length === 0 ? (
                       <EmptyState action={<Link to="/budgets">Set monthly budgets</Link>}>No category has a monthly budget yet.</EmptyState>
