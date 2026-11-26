@@ -61,7 +61,7 @@ export function Overview() {
           onSaved={(message, date) => {
             setAdding(false)
             const m = monthKey(date)
-            navigate(m === thisMonth ? '/' : `/?m=${m}`, { state: { added: message } })
+            navigate(m === thisMonth ? '/overview' : `/overview?m=${m}`, { state: { added: message } })
           }}
         />
       )}
@@ -241,7 +241,7 @@ export function Overview() {
                           {[...series].reverse().map((m) => (
                             <tr key={m.month} className={m.month === month ? 'is-current' : ''}>
                               <th scope="row">
-                                <Link to={m.month === thisMonth ? '/' : `/?m=${m.month}`}>{formatMonth(m.month, 'short')}</Link>
+                                <Link to={m.month === thisMonth ? '/overview' : `/overview?m=${m.month}`}>{formatMonth(m.month, 'short')}</Link>
                               </th>
                               <td className="num">{money(m.income, cur, 0)}</td>
                               <td className="num">{money(m.spent, cur, 0)}</td>

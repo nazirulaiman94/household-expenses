@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { useApp } from '../lib/context'
 
 const LINKS = [
-  { to: '/', label: 'Overview', end: true },
+  { to: '/overview', label: 'Overview' },
   { to: '/entries', label: 'Entries' },
   { to: '/budgets', label: 'Budgets' },
   { to: '/regular', label: 'Regular items' },
@@ -24,7 +24,7 @@ export function Shell({ children }: { children: ReactNode }) {
       )}
       <header className="topbar">
         <div className="container topbar__inner">
-          <NavLink to="/" className="wordmark" aria-label={`${household.name}, overview`}>
+          <NavLink to="/" className="wordmark" aria-label={`${household.name}, home`}>
             {household.name}
           </NavLink>
           <button
@@ -38,7 +38,7 @@ export function Shell({ children }: { children: ReactNode }) {
           </button>
           <nav id="primary-nav" className={`topnav${open ? ' is-open' : ''}`} aria-label="Main">
             {LINKS.map((l) => (
-              <NavLink key={l.to} to={l.to} end={l.end} className="topnav__link" onClick={() => setOpen(false)}>
+              <NavLink key={l.to} to={l.to} className="topnav__link" onClick={() => setOpen(false)}>
                 {l.label}
               </NavLink>
             ))}

@@ -61,7 +61,7 @@ export function Entries() {
           onClose={() => setAdding(false)}
           onSaved={(message, date) => {
             const m = monthKey(date)
-            navigate(m === thisMonth ? '/' : `/?m=${m}`, { state: { added: message } })
+            navigate(m === thisMonth ? '/overview' : `/overview?m=${m}`, { state: { added: message } })
           }}
         />
       )}

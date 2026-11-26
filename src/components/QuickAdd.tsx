@@ -1,13 +1,16 @@
 import { useId, useRef, useState, type FormEvent } from 'react'
 import { useApp } from '../lib/context'
-import { today } from '../lib/dates'
+import { monthKey, monthRange, today } from '../lib/dates'
 import { money } from '../lib/money'
 import type { Kind } from '../lib/types'
 
 /** The fast entry form: amount first, one tap for the kind, stays open for the next entry. */
 /** After a save, `onSaved` gets the confirmation text and the entry's date; the caller closes the form and shows the result. */
-export function QuickAdd({ onClose, onSaved }: { onClose?: () => void; onSaved?: (message: string, date: string) => void }) {
+export function QuickAdd({ onClose, onSaved, month, title = 'New entry' }: { onClose?: () => void; onSaved?: (message: string, date: string) => void; month?: string; title?: string }) {
   const { store, categories, household, changed } = useApp()
+  // With a month chosen, the date defaults inside it: today for this month, else its last day.
+  const range = month ? monthRange(month) : null
+  const defaultDate = !month || month === monthKey(today()) ? today() : range!.to
   const id = useId()
   const amountRef = useRef<HTMLInputElement>(null)
   const [kind, setKind] = useState<Kind>('expense')
@@ -69,7 +72,7 @@ export function QuickAdd({ onClose, onSaved }: { onClose?: () => void; onSaved?:
   return (
     <form className="quick-add well" onSubmit={submit} noValidate aria-labelledby={`${id}-h`}>
       <div className="quick-add__head">
-        <h2 id={`${id}-h`}>New entry</h2>
+        <h2 id={`${id}-h`}>{title}</h2>
         {onClose && (
           <button type="button" className="btn btn--quiet" onClick={onClose}>
             Close
@@ -113,7 +116,7 @@ export function QuickAdd({ onClose, onSaved }: { onClose?: () => void; onSaved?:
         </div>
         <div className="field">
           <label htmlFor={`${id}-date`}>Date</label>
-          <input id={`${id}-date`} name="date" type="date" defaultValue={today()} max="2100-12-31" />
+          <input id={`${id}-date`} name="date" type="date" defaultValue={defaultDate} min={range?.from} max={range ? (range.to < today() ? range.to : today()) : today()} />
           <p className="field__help" />
         </div>
         <div className="field field--wide">

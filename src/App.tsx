@@ -8,6 +8,7 @@ import { createDemoStore } from './lib/demoStore'
 import { NoHouseholdError, createSupabaseStore, supabase } from './lib/supabaseStore'
 import { Budgets } from './pages/Budgets'
 import { Entries } from './pages/Entries'
+import { Home } from './pages/Home'
 import { Overview } from './pages/Overview'
 import { Regular } from './pages/Regular'
 import { Savings } from './pages/Savings'
@@ -33,7 +34,8 @@ function Screens({ store }: { store: Store }) {
     >
       <Shell>
         <Routes>
-          <Route path="/" element={<Overview />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/overview" element={<Overview />} />
           <Route path="/entries" element={<Entries />} />
           <Route path="/budgets" element={<Budgets />} />
           <Route path="/regular" element={<Regular />} />
