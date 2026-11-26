@@ -1,0 +1,26 @@
+[
+ {
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "almanac",
+  "axes": "mid/grotesk-sans/chromatic-magenta",
+  "hero": "none",
+  "nav": "top bar",
+  "footer": "none",
+  "imagery": "none",
+  "photos": [],
+  "entry": "overview",
+  "fingerprint": "month-sheet+trend-chart",
+  "sections": [
+   "due list",
+   "month sheet",
+   "trend",
+   "where it went"
+  ],
+  "signature": "the month sheet",
+  "waived": [],
+  "prompt": "household expense tracker dashboard",
+  "date": "2026-11-26",
+  "mode": "build"
+ }
+]
