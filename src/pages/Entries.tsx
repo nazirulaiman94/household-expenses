@@ -114,7 +114,7 @@ export function Entries() {
           const outSum = rows.filter((e) => e.kind === 'expense').reduce((a, e) => a + e.amount, 0)
           return (
             <>
-              <table className="table entries-table">
+              <table className="table table--stack entries-table">
                 <thead>
                   <tr>
                     <th scope="col">Date</th>
@@ -128,18 +128,18 @@ export function Entries() {
                 <tbody>
                   {rows.map((e) => (
                     <tr key={e.id}>
-                      <td className="nowrap">{formatDay(e.date)}</td>
-                      <th scope="row">
+                      <td className="nowrap area-date">{formatDay(e.date)}</td>
+                      <th scope="row" className="area-what">
                         {e.note || catName(e.categoryId)}
                         <span className="show-s muted small"> {catName(e.categoryId)}</span>
                       </th>
                       <td className="hide-s">{catName(e.categoryId)}</td>
                       <td className="hide-s">{memberName(e.enteredBy)}</td>
-                      <td className={`num${e.kind === 'income' ? ' is-income' : ''}`}>
+                      <td className={`num area-amt${e.kind === 'income' ? ' is-income' : ''}`}>
                         {e.kind === 'income' ? '+' : ''}
                         {money(e.amount, cur)}
                       </td>
-                      <td className="row-actions">
+                      <td className="row-actions area-act">
                         <button
                           type="button"
                           className={`btn btn--small ${confirming === e.id ? 'btn--danger' : 'btn--quiet'}`}
@@ -154,14 +154,14 @@ export function Entries() {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th scope="row" colSpan={2}>{rows.length} entries</th>
+                    <th scope="row" colSpan={2} className="area-what">{rows.length} entries</th>
                     <td className="hide-s" colSpan={2} />
-                    <td className="num">
+                    <td className="num area-amt">
                       <span className="is-income">+{money(inSum, cur)}</span>
                       <br />
                       {money(outSum, cur)}
                     </td>
-                    <td />
+                    <td className="hide-s" />
                   </tr>
                 </tfoot>
               </table>

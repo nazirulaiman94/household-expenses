@@ -130,7 +130,7 @@ export function Regular() {
               No regular items yet. Add the payments that come round every month so the site can remind you.
             </EmptyState>
           ) : (
-            <table className="table">
+            <table className="table table--stack regular-table">
               <thead>
                 <tr>
                   <th scope="col">Item</th>
@@ -143,15 +143,15 @@ export function Regular() {
               <tbody>
                 {items.map((r) => (
                   <tr key={r.id} className={r.nextDue < today() ? 'is-over' : ''}>
-                    <th scope="row">
+                    <th scope="row" className="area-what">
                       {r.name}
                       <span className="muted small"> {categories.find((c) => c.id === r.categoryId)?.name}</span>
                       <span className="show-s small">{r.nextDue < today() ? 'Overdue, ' : 'Due '}{formatDay(r.nextDue)}</span>
                     </th>
                     <td className="hide-s">{CADENCE[r.cadence]}</td>
                     <td className="nowrap hide-s">{r.nextDue < today() ? `Overdue, ${formatDay(r.nextDue)}` : formatDay(r.nextDue)}</td>
-                    <td className={`num${r.kind === 'income' ? ' is-income' : ''}`}>{r.kind === 'income' ? '+' : ''}{money(r.amount, cur)}</td>
-                    <td className="row-actions">
+                    <td className={`num area-amt${r.kind === 'income' ? ' is-income' : ''}`}>{r.kind === 'income' ? '+' : ''}{money(r.amount, cur)}</td>
+                    <td className="row-actions area-act">
                       <button type="button" className="btn btn--small" onClick={() => run(() => store.confirmRecurring(r.id, r.amount))}>
                         {r.kind === 'income' ? 'Received' : 'Paid'}
                       </button>

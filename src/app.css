@@ -344,3 +344,55 @@ meter:-moz-meter-sub-optimum::-moz-meter-bar { background: var(--color-muted); }
 /* Controls and links read in Instrument Sans; Schibsted is for heads only */
 .btn, .tab, .segmented__opt span, .topnav__link { font-family: var(--font-body); }
 .quick-add { background: var(--color-cotton); box-shadow: var(--shadow-lift); }
+
+/* One size for every form control, on every screen */
+:root { --field-h: 48px; }
+input:not([type="radio"]):not([type="range"]):not([type="checkbox"]):not(.input--inline), select:not(.input--inline) {
+  height: var(--field-h) !important; min-height: var(--field-h) !important; padding: 0 var(--space-sm);
+  font: 400 var(--text-md)/1.2 var(--font-body); box-sizing: border-box; width: 100%; max-width: 100%; display: block; margin: 0;
+}
+.field--amount input { font-size: var(--text-md) !important; height: var(--field-h) !important; min-height: var(--field-h) !important; }
+input.num:not(.input--inline) { font-family: var(--font-mono); }
+input[type="date"] { -webkit-appearance: none; appearance: none; text-align: left; }
+input[type="date"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
+input[type="date"]::-webkit-datetime-edit { padding: 0; }
+select:not(.input--inline) {
+  -webkit-appearance: none; appearance: none; padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23384a40' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 12px 8px;
+}
+form .btn:not(.btn--small), .gate .btn, .quick-add .btn:not(.btn--small) { min-height: var(--field-h); }
+.stack-label { display: none; }
+
+/* Phone: tables with actions become stacked rows, so nothing runs off the screen */
+@media (max-width: 40rem) {
+  .home__month-select { min-width: 0; }
+  .table--stack, .table--stack tbody, .table--stack tfoot { display: block; width: 100%; }
+  .table--stack thead { display: none; }
+  .table--stack tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-md); row-gap: var(--space-2xs); align-items: center; padding: var(--space-sm) 0; border-top: var(--rule-hair) solid var(--color-rule); }
+  .table--stack tbody tr:first-child { border-top: 0; }
+  .table--stack tfoot tr { border-top: var(--rule-hair) solid var(--color-ink-2); }
+  .table--stack th, .table--stack td { display: block; padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; min-width: 0; }
+  .table--stack .hide-s, .table--stack td:empty { display: none; }
+  .table--stack .area-what, .table--stack .area-name { grid-column: 1; overflow-wrap: anywhere; }
+  .table--stack .area-amt { grid-column: 2; grid-row: 1; text-align: right; }
+  .table--stack .area-date { grid-column: 1; color: var(--color-muted); font-size: var(--text-sm); }
+  .table--stack .area-act { grid-column: 2; width: auto; display: flex; gap: var(--space-xs); justify-content: flex-end; flex-wrap: wrap; }
+  .table--stack .area-act .btn { width: auto; margin: 0; min-height: 40px; }
+  .table--stack tr.is-over, .table--stack tr.is-near { box-shadow: inset 3px 0 0 var(--color-muted); padding-left: var(--space-sm); }
+  .entries-table .area-what { grid-row: 1; }
+  .entries-table .area-date { grid-row: 2; }
+  .entries-table .area-act { grid-row: 2; }
+  .goals-table .area-act, .regular-table .area-act { grid-column: 1 / -1; }
+  .regular-table .area-what .show-s { margin-top: var(--space-3xs); }
+  /* Budgets: name on top, this month and budget side by side, buttons underneath */
+  .budgets-table tr { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .budgets-table .area-name { grid-column: 1 / -1; }
+  .budgets-table .area-name .input--inline { max-width: none; font-weight: 500; padding-inline: 0 !important; }
+  .budgets-table .area-spent, .budgets-table .area-budget { grid-row: auto; grid-column: auto; text-align: left; }
+  .budgets-table .area-spent::before { content: attr(data-label); display: block; color: var(--color-muted); font: 400 var(--text-sm)/1.3 var(--font-body); margin-bottom: var(--space-3xs); }
+  .budgets-table .stack-label { display: block; color: var(--color-muted); font: 400 var(--text-sm)/1.3 var(--font-body); margin-bottom: var(--space-3xs); }
+  .budgets-table .area-budget .input--inline { max-width: none; margin: 0; text-align: left; border-color: var(--color-rule-2) !important; background: var(--color-cotton) !important; height: var(--field-h) !important; padding-inline: var(--space-sm) !important; }
+  .budgets-table .area-spent { align-self: end; padding-bottom: var(--space-sm) !important; }
+  .budgets-table .area-act { grid-column: 1 / -1; justify-content: flex-start; }
+}

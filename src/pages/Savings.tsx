@@ -204,7 +204,7 @@ export function Savings() {
                 {!goals.length ? (
                   <EmptyState>No goals yet. Add one, such as an emergency fund, to see when you reach it.</EmptyState>
                 ) : (
-                  <table className="table">
+                  <table className="table table--stack goals-table">
                     <thead>
                       <tr>
                         <th scope="col">Goal</th>
@@ -220,13 +220,13 @@ export function Savings() {
                         const o = goalOutlook(g, now, monthly)
                         return (
                           <tr key={g.id} className={o.onTrack === false ? 'is-near' : ''}>
-                            <th scope="row">
+                            <th scope="row" className="area-what">
                               {g.name}
                               {g.targetDate && <span className="muted small"> by {formatMonth(monthKey(g.targetDate), 'short')}</span>}
                             </th>
-                            <td className="num">{money(g.target, cur, 0)}</td>
+                            <td className="num area-amt">{money(g.target, cur, 0)}</td>
                             <td className="num hide-s">{money(o.remaining, cur, 0)}</td>
-                            <td>
+                            <td className="area-date">
                               {o.monthsAtRate === 0
                                 ? <span className="paid-mark">Reached</span>
                                 : o.reachedOn
@@ -234,7 +234,7 @@ export function Savings() {
                                   : 'Not at this rate'}
                             </td>
                             <td className="num hide-s">{o.neededPerMonth !== null ? money(o.neededPerMonth, cur, 0) : ''}</td>
-                            <td className="row-actions">
+                            <td className="row-actions area-act">
                               <button type="button" className="btn btn--small btn--quiet" onClick={() => setEditing(g)}>Edit</button>
                               <button
                                 type="button"
