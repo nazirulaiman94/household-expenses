@@ -43,4 +43,4 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the Netlify site setting
 Not built yet: the reminder and budget **emails** (a scheduled Supabase
 function plus an email service). The in-site reminders work now.
 
-Design: Hallmark, Coral theme. Tokens in `src/tokens.css`, screen styles in `src/app.css`.
+Design: Hallmark, Dose theme. Tokens in `src/tokens.css`, screen styles in `src/app.css`.

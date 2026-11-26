@@ -1,11 +1,21 @@
-/* Hallmark · shape: app screen · genre: modern-minimal · theme: Coral (deal 1/3, seed household-finance-app-expense-1efe·f5f866cb·2026-11-26·r0)
- * nav: top bar, wordmark left, six text links, a menu under 60rem · signature: the month statement, a cotton sheet with income, spending, what is left and each budget against its limit · states: loading, empty, error, full
- * axes: light/grotesk-sans/warm · posture: restrained · contrast: pass · v2.0.0 */
-/* Hallmark · pre-emit critique: P4 H4 E5 S4 R5 V4 · weakest: P, a finance app drifts to four stat cards; the month is one statement sheet on cotton stock, figures in Geist Mono, coral kept for the paid mark */
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: Dose (deal 3/3, seed household-money-app-couple-2d8a·f5f866cb·2026-11-26·r0)
+ * nav: top bar, wordmark home, six text links, a menu under 60rem · signature: the month statement, a white sheet lifted off warm paper, figures in DM Mono, budgets as pale green trays · states: loading, empty, error, full · dose: white
+ * axes: light/grotesk-sans/chromatic-green · posture: committed · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E5 S4 R5 V4 · weakest: P, a money app drifts to stat tiles; the month stays one lifted statement with mint marking what is settled and green doing every signal */
 @import url("./tokens.css");
 @import url("./base.css");
 
 :root {
+  /* App surfaces in Dose's material: white sheets lifted off warm paper */
+  --color-cotton: oklch(99.6% 0.004 120); --color-print: var(--color-ink);
+  --color-board: var(--color-ink); --color-board-type: var(--color-paper);
+  --color-rule-2: oklch(79% 0.03 150); --color-accent-2: var(--color-accent-deep); --color-paid: var(--color-accent);
+  --shade: 30% 0.03 165;
+  --radius-stock: var(--radius-input);
+  --edge-stock: 0 0 0 1px var(--color-rule);
+  --cast-stock: 0 1px 2px oklch(30% 0.03 165 / 0.08);
+  --cast-stock-lift: var(--shadow-lift);
+  --press-groove: inset 0 1px 2px oklch(30% 0.03 165 / 0.12), 0 0 0 1px var(--color-rule);
   --control-h: 40px;
   --control-h-s: 32px;
   --app-container: 1200px;
@@ -275,3 +285,62 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar { background: var(--color-error
 .home__totals { display: flex; flex-wrap: wrap; gap: var(--space-xl); margin: 0; }
 .home__totals dt { font-size: var(--text-sm); color: var(--color-muted); }
 .home__totals dd { margin: var(--space-3xs) 0 0; font-size: var(--text-lg); color: var(--color-ink); }
+
+
+/* Dose controls: moulded plastic, the primary in green */
+.btn { box-shadow: inset 0 1px 0 var(--glint), 0 0 0 1px var(--color-rule), 0 3px 0 var(--color-rule); background: var(--color-cotton); }
+.btn:hover { transform: none; box-shadow: inset 0 1px 0 var(--glint), 0 0 0 1px var(--color-rule-2), 0 3px 0 var(--color-rule-2); }
+.btn:active { transform: translateY(3px); box-shadow: inset 0 1px 0 var(--glint), 0 0 0 1px var(--color-rule-2); }
+.btn--primary { background: linear-gradient(var(--color-accent), var(--color-accent-deep)); color: var(--color-accent-ink); box-shadow: inset 0 1px 0 color-mix(in oklab, var(--glint) 35%, transparent), 0 0 0 1px var(--color-accent-deep), 0 3px 0 var(--color-accent-deep); }
+.btn--primary:hover { background: linear-gradient(var(--color-accent-deep), var(--color-accent-deep)); box-shadow: 0 0 0 1px var(--color-accent-deep), 0 3px 0 var(--color-accent-deep); }
+.btn--primary:active { box-shadow: 0 0 0 1px var(--color-accent-deep); }
+.btn--quiet, .btn--quiet:hover, .btn--quiet:active { box-shadow: none; transform: none; }
+.btn--danger, .btn--danger:hover { box-shadow: inset 0 0 0 1px var(--color-error), 0 3px 0 var(--color-rule); }
+.btn:disabled { box-shadow: 0 0 0 1px var(--color-rule); }
+
+/* Choices are plastic keys, mint when checked */
+.segmented__opt input:checked + span, .tab[aria-pressed="true"] { background: var(--color-accent-soft); color: var(--color-ink); box-shadow: inset 0 1px 0 var(--glint), 0 0 0 1px color-mix(in oklab, var(--color-accent) 35%, transparent); }
+
+/* Navigation: the current page in mint */
+.topnav__link.active { background: var(--color-accent-soft); color: var(--color-ink); }
+.topnav__link:hover { background: var(--color-paper-3); }
+.wordmark { font-weight: 700; }
+
+/* Surfaces */
+.sheet, .quick-add { border-radius: var(--radius-card); box-shadow: var(--shadow-lift); }
+.well, .due { border-radius: var(--radius-card); background: var(--color-paper-2); box-shadow: inset 0 1.5px 0 var(--glint), 0 0 0 1px var(--color-rule); }
+input:not([type="radio"]):not([type="range"]), select { border-color: var(--color-muted); border-radius: var(--radius-input); }
+input:not([type="radio"]):not([type="range"]):focus-visible, select:focus-visible, input:not([type="radio"]):not([type="range"]):focus, select:focus { outline-color: var(--color-accent); border-color: var(--color-accent); }
+input[type="range"] { accent-color: var(--color-accent); }
+.flash { background: var(--color-accent-soft); color: var(--color-ink); }
+.is-income { color: var(--color-accent-deep); }
+.status--ok { color: var(--color-accent-deep); }
+
+/* Late is grey, never red */
+.due__item.is-overdue .due__when { color: var(--color-ink-2); font-weight: 500; }
+.table tr.is-near th:first-child { box-shadow: inset 3px 0 0 var(--color-muted); }
+
+/* Figures in DM Mono, the left-over figure in green */
+.figures__key dd { color: var(--color-accent-deep); }
+.figures dd { font-weight: 400; letter-spacing: -0.02em; }
+
+/* Budget bars as pale trays, green when on track */
+meter, meter::-webkit-meter-bar { background: var(--color-paper-3); height: 8px; border-radius: 4px; }
+meter::-webkit-meter-optimum-value { background: var(--color-accent); border-radius: 4px; }
+meter::-webkit-meter-suboptimum-value { background: var(--color-muted); border-radius: 4px; }
+meter:-moz-meter-optimum::-moz-meter-bar { background: var(--color-accent); }
+meter:-moz-meter-sub-optimum::-moz-meter-bar { background: var(--color-muted); }
+
+/* Chart: one series in green, the projection dashed */
+.chart__series { stroke: var(--color-accent); }
+.chart__series--projected { stroke: var(--color-accent-deep); }
+.chart__end { fill: var(--color-accent-deep); }
+.chart__mark { stroke: var(--color-muted); }
+.chart__mark-label { fill: var(--color-ink-2); }
+
+/* The settled state: a green stamp */
+.paid-mark { font: 500 var(--text-sm)/1 var(--font-outlier); color: var(--color-accent-deep); padding: var(--space-2xs) var(--space-xs); border: 1px solid var(--color-accent); outline: 1px solid var(--color-accent); outline-offset: 2px; border-radius: 4px; transform: rotate(-2deg); text-shadow: none; }
+
+/* Controls and links read in Instrument Sans; Schibsted is for heads only */
+.btn, .tab, .segmented__opt span, .topnav__link { font-family: var(--font-body); }
+.quick-add { background: var(--color-cotton); box-shadow: var(--shadow-lift); }
