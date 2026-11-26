@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:artifact": "tsc -b && vite build -c vite.artifact.config.ts",
     "lint": "oxlint",
     "preview": "vite preview"
   },

@@ -1,7 +1,7 @@
 import type { Category, Entry, Goal, Household, Member, NewEntry, Recurring } from './types'
 
 export interface Store {
-  mode: 'demo' | 'supabase'
+  mode: 'demo' | 'supabase' | 'shared'
   /** The signed-in member, or null when nobody is signed in. */
   me(): Promise<Member | null>
   household(): Promise<Household>

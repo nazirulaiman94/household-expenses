@@ -92,6 +92,10 @@ export function Settings() {
             ))}
           </div>
         </section>
+      ) : store.mode === 'shared' ? (
+        <p className="muted small">
+          Everyone this page is shared with as a Contributor or above can add entries and sees the same figures. People appear under Members once they have added something.
+        </p>
       ) : (
         <section className="settings">
           <button type="button" className="btn" onClick={() => supabase?.auth.signOut()}>Sign out</button>
