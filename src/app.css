@@ -468,3 +468,13 @@ input[type="date"]::-webkit-date-and-time-value { line-height: calc(var(--field-
 .hero .skeleton__bar { background: oklch(100% 0 0 / 0.15); }
 .hero .state--error { color: #fff; }
 @media (max-width: 40rem) { .hero { padding: var(--space-md); } .hero__split { gap: var(--space-lg); } .hero__art { height: 55%; opacity: 0.35; } }
+
+/* Phone: month switcher spans the width with the month centred between the buttons */
+@media (max-width: 40rem) {
+  .page-head:has(.month-nav) { display: block; }
+  .month-nav { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; width: 100%; }
+  .page-head .month-nav h1 { min-width: 0; font-size: var(--text-2xl); line-height: 1.15; white-space: nowrap; text-align: center; margin: 0; }
+  .month-nav .btn { width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 50%; }
+  .month-nav__arrow { font-size: 1.6rem; line-height: 1; margin-top: -2px; }
+}
+@media (min-width: 40.01rem) { .month-nav__arrow { display: none; } }

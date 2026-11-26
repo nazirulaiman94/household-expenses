@@ -41,15 +41,17 @@ export function Overview() {
       <div className="page-head">
         <div className="month-nav">
           <button type="button" className="btn btn--quiet btn--small" onClick={() => go(addMonths(month, -1))} aria-label="Previous month">
-            Previous
+            <span aria-hidden="true" className="month-nav__arrow">‹</span>
+            <span className="hide-s">Previous</span>
           </button>
           <h1>{formatMonth(month)}</h1>
           <button type="button" className="btn btn--quiet btn--small" onClick={() => go(addMonths(month, 1))} disabled={month >= thisMonth} aria-label="Next month">
-            Next
+            <span className="hide-s">Next</span>
+            <span aria-hidden="true" className="month-nav__arrow">›</span>
           </button>
         </div>
         {!adding && (
-          <button type="button" className="btn btn--primary" onClick={() => setAdding(true)}>
+          <button type="button" className="btn btn--primary hide-s" onClick={() => setAdding(true)}>
             Add entry
           </button>
         )}
