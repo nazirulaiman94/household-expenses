@@ -396,3 +396,46 @@ form .btn:not(.btn--small), .gate .btn, .quick-add .btn:not(.btn--small) { min-h
   .budgets-table .area-spent { align-self: end; padding-bottom: var(--space-sm) !important; }
   .budgets-table .area-act { grid-column: 1 / -1; justify-content: flex-start; }
 }
+
+/* Date box: keep the text vertically centred and left aligned (iOS Safari) */
+input[type="date"] { line-height: calc(var(--field-h) - 2px); padding-block: 0 !important; }
+input[type="date"]::-webkit-date-and-time-value { line-height: calc(var(--field-h) - 2px); min-height: calc(var(--field-h) - 2px); display: block; text-align: left; }
+
+/* Phone: bottom tab bar with a central add button, in place of the top menu */
+.tabbar, .tabbar__scrim { display: none; }
+@media (max-width: 40rem) {
+  .topnav, .topbar__who, .btn.topbar__menu { display: none !important; }
+  .topbar__inner { min-height: 56px; }
+  .main { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end;
+    position: fixed; inset: auto 0 0 0; z-index: calc(var(--z-sticky-nav) + 2);
+    padding: var(--space-2xs) max(var(--space-xs), env(safe-area-inset-right)) calc(var(--space-2xs) + env(safe-area-inset-bottom)) max(var(--space-xs), env(safe-area-inset-left));
+    background: var(--color-cotton); border-top: var(--rule-hair) solid var(--color-rule);
+    box-shadow: 0 -6px 20px color-mix(in oklab, var(--color-ink) 7%, transparent);
+  }
+  .tabbar__item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; justify-content: center;
+    border: 0; background: none; padding: 0; color: var(--color-muted); text-decoration: none; cursor: pointer;
+    font: 500 0.72rem/1.1 var(--font-body); -webkit-tap-highlight-color: transparent;
+  }
+  .tabbar__item.active { color: var(--color-ink); }
+  .tabbar__item.active svg { color: var(--color-accent); }
+  .tabbar__add {
+    justify-self: center; align-self: center; width: 56px; height: 56px; margin-top: -24px; border-radius: 50%;
+    display: grid; place-items: center; color: #fff; text-decoration: none;
+    background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 85%, white), var(--color-accent));
+    box-shadow: 0 6px 16px color-mix(in oklab, var(--color-accent) 40%, transparent), 0 0 0 4px var(--color-cotton);
+  }
+  .tabbar__add svg { width: 26px; height: 26px; }
+  .tabbar__add.active { outline: 2px solid var(--color-accent); outline-offset: 5px; }
+  .tabbar__sheet {
+    position: absolute; right: var(--space-sm); bottom: calc(100% + var(--space-xs)); min-width: 13rem;
+    display: grid; padding: var(--space-xs); background: var(--color-cotton); border-radius: var(--radius-card, 16px);
+    border: var(--rule-hair) solid var(--color-rule); box-shadow: 0 12px 32px color-mix(in oklab, var(--color-ink) 16%, transparent);
+  }
+  .tabbar__sheet-link { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-sm); border-radius: var(--radius-input); color: var(--color-ink); text-decoration: none; font: 500 var(--text-md)/1 var(--font-body); }
+  .tabbar__sheet-link.active { background: var(--color-accent-soft); }
+  .tabbar__who { margin: var(--space-2xs) var(--space-sm) var(--space-3xs); }
+  .tabbar__scrim { display: block; position: fixed; inset: 0; z-index: calc(var(--z-sticky-nav) + 1); border: 0; background: color-mix(in oklab, var(--color-ink) 18%, transparent); }
+}
