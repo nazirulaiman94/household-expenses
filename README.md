@@ -10,9 +10,9 @@ npm install
 npm run dev
 ```
 
-With no Supabase keys set, the app runs on **sample data kept in your browser**,
-so you can click through everything straight away. Settings has buttons to
-restore the sample data or clear it.
+With no Supabase keys set, the app keeps entries **in your browser** and starts empty,
+so you can try it straight away. Settings can load a year of sample data
+to see the pages full, or clear everything.
 
 ## Connect Supabase (real data, two logins)
 

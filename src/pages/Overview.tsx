@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { DueList } from '../components/DueList'
 import { LineChart } from '../components/LineChart'
 import { QuickAdd } from '../components/QuickAdd'
 import { EmptyState, Loaded } from '../components/States'
 import { useApp, useLoad } from '../lib/context'
 import { addMonths, formatDay, formatMonth, monthKey, monthRange, today } from '../lib/dates'
+import { hasSampleData } from '../lib/demoStore'
 import { money, moneyRound } from '../lib/money'
 import { budgetAlerts, dueSoon, monthSeries, spendByCategory, totalsFor } from '../lib/stats'
 
@@ -16,6 +17,14 @@ export function Overview() {
   const thisMonth = monthKey(today())
   const month = /^\d{4}-\d{2}$/.test(params.get('m') ?? '') ? params.get('m')! : thisMonth
   const [adding, setAdding] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const added = (location.state as { added?: string } | null)?.added ?? null
+  const sheetRef = useRef<HTMLElement>(null)
+  // Arriving from a save: bring the month statement into view.
+  useEffect(() => {
+    if (added) sheetRef.current?.scrollIntoView({ block: 'start' })
+  }, [added])
 
   const load = useLoad(async (s) => {
     const from = monthRange(addMonths(month, -11)).from
@@ -46,7 +55,21 @@ export function Overview() {
         )}
       </div>
 
-      {adding && <QuickAdd onClose={() => setAdding(false)} />}
+      {adding && (
+        <QuickAdd
+          onClose={() => setAdding(false)}
+          onSaved={(message, date) => {
+            setAdding(false)
+            const m = monthKey(date)
+            navigate(m === thisMonth ? '/' : `/?m=${m}`, { state: { added: message } })
+          }}
+        />
+      )}
+      {added && !adding && (
+        <p className="flash" role="status">
+          {added}
+        </p>
+      )}
 
       <Loaded load={load} what="this month" rows={8}>
         {({ entries, recurring }) => {
@@ -62,12 +85,15 @@ export function Overview() {
           for (const e of entries) if (e.kind === 'expense') yearSpend.set(e.categoryId, (yearSpend.get(e.categoryId) ?? 0) + e.amount)
           const yearTotal = [...yearSpend.values()].reduce((a, b) => a + b, 0)
           const yearRows = [...yearSpend.entries()].sort((a, b) => b[1] - a[1])
+          // Average over the months actually tracked, from the first entry, at most 12.
+          const firstMonth = entries.reduce((m, e) => (monthKey(e.date) < m ? monthKey(e.date) : m), month)
+          const [fy, fm] = firstMonth.split('-').map(Number)
+          const [my, mm] = month.split('-').map(Number)
+          const trackedMonths = Math.min(12, Math.max(1, (my - fy) * 12 + (mm - fm) + 1))
 
           return (
             <>
-              {month === thisMonth && <DueList due={dueSoon(recurring)} alerts={budgetAlerts(uses)} />}
-
-              <section className="sheet" aria-labelledby="sheet-h">
+              <section className="sheet" aria-labelledby="sheet-h" ref={sheetRef}>
                 <div className="sheet__head">
                   <h2 id="sheet-h">The month so far</h2>
                   <p className="sheet__date">{month === thisMonth ? `To ${formatDay(today())}` : formatMonth(month)}</p>
@@ -118,13 +144,13 @@ export function Overview() {
                             const left = (u.category.budget ?? 0) - u.spent
                             const share = u.share ?? 0
                             return (
-                              <tr key={u.category.id} className={share >= 1 ? 'is-over' : share >= 0.8 ? 'is-near' : ''}>
+                              <tr key={u.category.id} className={share > 1.0001 ? 'is-over' : share >= 0.8 ? 'is-near' : ''}>
                                 <th scope="row">{u.category.name}</th>
                                 <td className="num">{money(u.spent, cur)}</td>
                                 <td className="num hide-s">{money(u.category.budget ?? 0, cur, 0)}</td>
                                 <td className="num">{money(left, cur)}</td>
                                 <td className="budget-table__bar">
-                                  <meter min={0} max={1} low={0.8} high={0.999} optimum={0.4} value={Math.min(share, 1)} aria-label={`${Math.round(share * 100)}% of budget used`} />
+                                  <meter min={0} max={1} low={0.8} high={0.99995} optimum={0.4} value={share > 1.0001 ? 1 : Math.min(share, 0.9999)} aria-label={`${Math.round(share * 100)}% of budget used`} />
                                 </td>
                               </tr>
                             )
@@ -183,6 +209,8 @@ export function Overview() {
                   </>
                 )}
               </section>
+
+              {month === thisMonth && <DueList due={dueSoon(recurring)} alerts={budgetAlerts(uses)} />}
 
               <section className="trend" aria-labelledby="trend-h">
                 <div className="section-head">
@@ -250,7 +278,7 @@ export function Overview() {
                         <tr key={id}>
                           <th scope="row">{catName(id)}</th>
                           <td className="num">{money(sum, cur, 0)}</td>
-                          <td className="num">{money(sum / 12, cur, 0)}</td>
+                          <td className="num">{money(sum / trackedMonths, cur, 0)}</td>
                           <td className="num">{Math.round((sum / yearTotal) * 100)}%</td>
                         </tr>
                       ))}
@@ -258,7 +286,7 @@ export function Overview() {
                   </table>
                 </section>
               )}
-              {store.mode === 'demo' && <p className="muted small">Sample figures. Clear them in Settings when you start using it for real.</p>}
+              {store.mode === 'demo' && hasSampleData() && <p className="muted small">Sample figures. Clear them in Settings when you start using it for real.</p>}
             </>
           )
         }}

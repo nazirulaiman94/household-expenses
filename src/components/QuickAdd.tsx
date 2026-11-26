@@ -5,20 +5,25 @@ import { money } from '../lib/money'
 import type { Kind } from '../lib/types'
 
 /** The fast entry form: amount first, one tap for the kind, stays open for the next entry. */
-export function QuickAdd({ onClose }: { onClose?: () => void }) {
+/** After a save, `onSaved` gets the confirmation text and the entry's date; the caller closes the form and shows the result. */
+export function QuickAdd({ onClose, onSaved }: { onClose?: () => void; onSaved?: (message: string, date: string) => void }) {
   const { store, categories, household, changed } = useApp()
   const id = useId()
   const amountRef = useRef<HTMLInputElement>(null)
   const [kind, setKind] = useState<Kind>('expense')
   const options = categories.filter((c) => c.kind === kind)
-  const [categoryId, setCategoryId] = useState(options[0]?.id ?? '')
+  const preferred = (k: Kind) => {
+    const list = categories.filter((c) => c.kind === k)
+    return (list.find((c) => c.name === (k === 'expense' ? 'Groceries' : 'Salary')) ?? list[0])?.id ?? ''
+  }
+  const [categoryId, setCategoryId] = useState(preferred('expense'))
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null)
   const [amountError, setAmountError] = useState('')
 
   function switchKind(k: Kind) {
     setKind(k)
-    setCategoryId(categories.find((c) => c.kind === k)?.id ?? '')
+    setCategoryId(preferred(k))
   }
 
   async function submit(ev: FormEvent<HTMLFormElement>) {
@@ -43,7 +48,13 @@ export function QuickAdd({ onClose }: { onClose?: () => void }) {
         date: String(data.get('date') || today()),
       })
       const cat = categories.find((c) => c.id === categoryId)?.name ?? ''
-      setStatus({ tone: 'ok', text: `Added ${money(amount, household.currency)} to ${cat}.` })
+      const message = `Added ${money(amount, household.currency)} to ${cat}.`
+      if (onSaved) {
+        onSaved(message, String(data.get('date') || today()))
+        changed()
+        return
+      }
+      setStatus({ tone: 'ok', text: message })
       ;(form.elements.namedItem('amount') as HTMLInputElement).value = ''
       ;(form.elements.namedItem('note') as HTMLInputElement).value = ''
       amountRef.current?.focus()

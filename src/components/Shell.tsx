@@ -19,7 +19,7 @@ export function Shell({ children }: { children: ReactNode }) {
       <a className="skip" href="#main">Skip to content</a>
       {store.mode === 'demo' && (
         <p className="demo-note">
-          Draft with sample data, saved only in this browser. Connect Supabase to use your real household.
+          Draft version: entries are saved only in this browser until Supabase is connected.
         </p>
       )}
       <header className="topbar">

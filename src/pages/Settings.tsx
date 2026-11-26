@@ -72,7 +72,7 @@ export function Settings() {
       {store.mode === 'demo' ? (
         <section className="settings" aria-labelledby="demo-h">
           <h2 id="demo-h">Sample data</h2>
-          <p>This draft runs on sample figures kept in this browser. Start over with fresh sample data, or clear everything to try it with your own numbers.</p>
+          <p>This draft keeps everything in this browser. Load a year of sample figures to see how the pages look when full, or clear everything to start fresh.</p>
           <div className="form-actions">
             {(['sample', 'empty'] as const).map((k) => (
               <button
@@ -87,7 +87,7 @@ export function Settings() {
                   changed()
                 }}
               >
-                {confirmReset === k ? 'Confirm, this replaces everything' : k === 'sample' ? 'Restore sample data' : 'Clear all entries'}
+                {confirmReset === k ? 'Confirm, this replaces everything' : k === 'sample' ? 'Load sample data' : 'Clear everything'}
               </button>
             ))}
           </div>

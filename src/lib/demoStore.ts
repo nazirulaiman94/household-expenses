@@ -5,10 +5,12 @@ import type { Category, Entry, Goal, Household, Recurring } from './types'
 
 /**
  * A browser-only store so the draft runs before Supabase is connected.
- * Everything is sample data, kept in this browser's localStorage.
+ * It starts empty; sample data can be loaded from Settings. Kept in this browser's localStorage.
  */
 
 interface DemoState {
+  /** True while the sample figures are loaded. */
+  sample?: boolean
   household: Household
   categories: Category[]
   entries: Entry[]
@@ -16,7 +18,7 @@ interface DemoState {
   goals: Goal[]
 }
 
-const KEY = 'household-expenses:demo:v3'
+const KEY = 'household-expenses:demo:v4'
 let memory: DemoState | null = null
 
 const uid = () => Math.random().toString(36).slice(2, 10)
@@ -121,7 +123,7 @@ function load(): DemoState {
   } catch {
     /* storage blocked: fall back to memory */
   }
-  if (!memory) memory = seedState()
+  if (!memory) memory = emptyState()
   return memory
 }
 
@@ -133,16 +135,24 @@ function save() {
   }
 }
 
+function emptyState(): DemoState {
+  const s = seedState()
+  s.entries = []
+  s.recurring = []
+  s.goals = []
+  s.household.openingBalance = 0
+  s.categories = s.categories.map((c) => ({ ...c, budget: null }))
+  s.sample = false
+  return s
+}
+
 export function resetDemo(empty = false) {
-  memory = seedState()
-  if (empty) {
-    memory.entries = []
-    memory.recurring = []
-    memory.goals = []
-    memory.household.openingBalance = 0
-    memory.categories = memory.categories.map((c) => ({ ...c, budget: null }))
-  }
+  memory = empty ? emptyState() : { ...seedState(), sample: true }
   save()
+}
+
+export function hasSampleData(): boolean {
+  return load().sample === true
 }
 
 const tick = <T,>(v: T) => new Promise<T>((r) => setTimeout(() => r(v), 120))

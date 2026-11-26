@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { QuickAdd } from '../components/QuickAdd'
 import { EmptyState, Loaded } from '../components/States'
 import { useApp, useLoad } from '../lib/context'
@@ -15,6 +15,7 @@ export function Entries() {
   const cat = params.get('c') ?? ''
   const who = params.get('who') ?? ''
   const [adding, setAdding] = useState(false)
+  const navigate = useNavigate()
   const [confirming, setConfirming] = useState<string | null>(null)
   const [error, setError] = useState('')
 
@@ -55,7 +56,15 @@ export function Entries() {
           </button>
         )}
       </div>
-      {adding && <QuickAdd onClose={() => setAdding(false)} />}
+      {adding && (
+        <QuickAdd
+          onClose={() => setAdding(false)}
+          onSaved={(message, date) => {
+            const m = monthKey(date)
+            navigate(m === thisMonth ? '/' : `/?m=${m}`, { state: { added: message } })
+          }}
+        />
+      )}
 
       <div className="filters" role="group" aria-label="Filter entries">
         <div className="field">

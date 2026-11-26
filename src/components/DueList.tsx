@@ -57,10 +57,10 @@ export function DueList({ due, alerts }: { due: Recurring[]; alerts: CategoryUse
           )
         })}
         {alerts.map((a) => (
-          <li key={a.category.id} className={`due__item${(a.share ?? 0) >= 1 ? ' is-overdue' : ''}`}>
+          <li key={a.category.id} className={`due__item${(a.share ?? 0) > 1.0001 ? ' is-overdue' : ''}`}>
             <span className="due__name">{a.category.name} budget</span>
             <span className="due__when">
-              {(a.share ?? 0) >= 1 ? 'Over budget' : `${Math.round((a.share ?? 0) * 100)}% used`}
+              {(a.share ?? 0) > 1.0001 ? 'Over budget' : (a.share ?? 0) >= 0.9999 ? 'Used up' : `${Math.round((a.share ?? 0) * 100)}% used`}
             </span>
             <span className="num due__amt">
               {money(a.spent, household.currency)} of {money(a.category.budget ?? 0, household.currency, 0)}

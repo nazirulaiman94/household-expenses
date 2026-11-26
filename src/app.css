@@ -94,7 +94,7 @@ a:not([class]):hover { text-decoration-color: var(--color-accent-2); }
 .field label { font-size: var(--text-sm); font-weight: 500; color: var(--color-muted); }
 input:not([type="radio"]):not([type="range"]), select { min-height: var(--control-h); padding: 0 var(--space-sm); border: var(--rule-hair) solid var(--color-rule-2); border-radius: var(--radius-input); background: var(--color-cotton); color: var(--color-ink); font-size: var(--text-md); width: 100%; min-width: 0; transition: border-color var(--dur-micro) var(--ease-out); }
 input:not([type="radio"]):not([type="range"]):hover, select:hover { border-color: var(--color-muted); }
-input:not([type="radio"]):not([type="range"]):focus-visible, select:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -1px; transition: none; }
+input:not([type="radio"]):not([type="range"]):focus-visible, select:focus-visible, input:not([type="radio"]):not([type="range"]):focus, select:focus { outline: 2px solid var(--color-ink); outline-offset: -1px; border-color: var(--color-ink); transition: none; }
 input[aria-invalid="true"] { border-color: var(--color-error); }
 input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 input::placeholder { color: var(--color-muted); opacity: 0.75; }
@@ -131,6 +131,9 @@ input[type="range"]:focus-visible { outline: 2px solid var(--color-focus); outli
 .status { margin: 0; font-size: var(--text-sm); min-height: 1lh; }
 .status--ok { color: var(--color-success); }
 .status--error { color: var(--color-error); }
+
+/* Confirmation after a save */
+.flash { margin: 0; padding: var(--space-sm) var(--space-md); border-radius: var(--radius-card); background: var(--color-paper-2); color: var(--color-success); font-weight: 500; }
 
 /* Filters */
 .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 16rem)); gap: var(--space-md); }
