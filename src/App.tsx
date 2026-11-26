@@ -9,6 +9,7 @@ import { NoHouseholdError, createSupabaseStore, supabase } from './lib/supabaseS
 import { Budgets } from './pages/Budgets'
 import { Entries } from './pages/Entries'
 import { Home } from './pages/Home'
+import { Loans } from './pages/Loans'
 import { Overview } from './pages/Overview'
 import { Regular } from './pages/Regular'
 import { Savings } from './pages/Savings'
@@ -39,6 +40,7 @@ function Screens({ store }: { store: Store }) {
           <Route path="/entries" element={<Entries />} />
           <Route path="/budgets" element={<Budgets />} />
           <Route path="/regular" element={<Regular />} />
+            <Route path="/loans" element={<Loans />} />
           <Route path="/savings" element={<Savings />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />

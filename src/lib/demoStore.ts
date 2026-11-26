@@ -1,7 +1,7 @@
 import { addDays, addMonths, advance, monthKey, today } from './dates'
 import type { Store } from './store'
 import { PRESET_CATEGORIES } from './store'
-import type { Category, Entry, Goal, Household, Recurring } from './types'
+import type { Category, Entry, Goal, Household, Loan, Recurring } from './types'
 
 /**
  * A browser-only store so the draft runs before Supabase is connected.
@@ -16,6 +16,7 @@ interface DemoState {
   entries: Entry[]
   recurring: Recurring[]
   goals: Goal[]
+  loans?: Loan[]
 }
 
 const KEY = 'household-expenses:demo:v4'
@@ -232,6 +233,41 @@ export function createDemoStore(): Store {
     async deleteGoal(id) {
       const st = s()
       st.goals = st.goals.filter((g) => g.id !== id)
+      save()
+    },
+    loans: () => tick(structuredClone(s().loans ?? [])),
+    async saveLoan(l) {
+      const st = s()
+      const list = (st.loans ??= [])
+      const i = l.id ? list.findIndex((x) => x.id === l.id) : -1
+      if (i >= 0) list[i] = { ...list[i], ...l, id: list[i].id }
+      else list.push({ ...l, id: uid(), lastPaid: null, lastEntryId: null })
+      save()
+    },
+    async deleteLoan(id) {
+      const st = s()
+      st.loans = (st.loans ?? []).filter((l) => l.id !== id)
+      save()
+    },
+    async payLoan(id) {
+      const st = s()
+      const l = (st.loans ?? []).find((x) => x.id === id)
+      const month = monthKey(today())
+      if (!l) return
+      if (l.lastPaid === month) throw new Error('This month is already marked as paid.')
+      if (l.monthsLeft <= 0) throw new Error('This loan is already paid off.')
+      const entryId = uid()
+      st.entries.push({ id: entryId, kind: 'expense', amount: l.monthly, categoryId: l.categoryId, note: `${l.name} instalment`, date: today(), enteredBy: st.household.members[0].id })
+      st.entries.sort((a, b) => (a.date < b.date ? 1 : -1))
+      Object.assign(l, { monthsLeft: l.monthsLeft - 1, lastPaid: month, lastEntryId: entryId })
+      save()
+    },
+    async undoLoanPayment(id) {
+      const st = s()
+      const l = (st.loans ?? []).find((x) => x.id === id)
+      if (!l || l.lastPaid !== monthKey(today())) return
+      st.entries = st.entries.filter((e) => e.id !== l.lastEntryId)
+      Object.assign(l, { monthsLeft: l.monthsLeft + 1, lastPaid: null, lastEntryId: null })
       save()
     },
   }

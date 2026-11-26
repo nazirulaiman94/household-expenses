@@ -53,3 +53,22 @@ export interface Goal {
 }
 
 export type NewEntry = Omit<Entry, 'id' | 'enteredBy'>
+
+export type Lender = 'bank' | 'bnpl'
+
+/** A loan or buy-now-pay-later plan paid off in equal monthly instalments. */
+export interface Loan {
+  id: string
+  name: string
+  lender: Lender
+  /** The instalment paid each month. */
+  monthly: number
+  /** Instalments still to pay. */
+  monthsLeft: number
+  /** Day of the month the instalment is due, 1 to 31; null when not set. */
+  dueDay: number | null
+  categoryId: string
+  /** Month (YYYY-MM) of the last instalment marked paid, and the entry it created. */
+  lastPaid: string | null
+  lastEntryId: string | null
+}

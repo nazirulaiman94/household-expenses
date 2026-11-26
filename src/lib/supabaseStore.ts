@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-import { advance } from './dates'
+import { advance, monthKey, today } from './dates'
 import type { Store } from './store'
-import type { Category, Entry, Goal, Recurring } from './types'
+import type { Category, Entry, Goal, Loan, Recurring } from './types'
 
 export class NoHouseholdError extends Error {
   constructor() {
@@ -51,6 +51,18 @@ const toGoal = (r: Row): Goal => ({
   name: r.name as string,
   target: num(r.target_amount),
   targetDate: (r.target_date as string | null) ?? null,
+})
+
+const toLoan = (r: Row): Loan => ({
+  id: r.id as string,
+  name: r.name as string,
+  lender: r.lender === 'bnpl' ? 'bnpl' : 'bank',
+  monthly: num(r.monthly_amount),
+  monthsLeft: num(r.months_left),
+  dueDay: r.due_day == null ? null : num(r.due_day),
+  categoryId: r.category_id as string,
+  lastPaid: (r.last_paid_month as string | null) ?? null,
+  lastEntryId: (r.last_entry_id as string | null) ?? null,
 })
 
 export function createSupabaseStore(sb: SupabaseClient): Store {
@@ -174,6 +186,25 @@ export function createSupabaseStore(sb: SupabaseClient): Store {
     },
     async deleteGoal(id) {
       check(await sb.from('goals').delete().eq('id', id))
+    },
+    async loans() {
+      const h = await householdId()
+      return (check(await sb.from('loans').select('*').eq('household_id', h).order('name')) as Row[]).map(toLoan)
+    },
+    async saveLoan(l) {
+      const h = await householdId()
+      const row = { household_id: h, name: l.name, lender: l.lender, monthly_amount: l.monthly, months_left: l.monthsLeft, due_day: l.dueDay, category_id: l.categoryId }
+      if (l.id) check(await sb.from('loans').update(row).eq('id', l.id))
+      else check(await sb.from('loans').insert(row))
+    },
+    async deleteLoan(id) {
+      check(await sb.from('loans').delete().eq('id', id))
+    },
+    async payLoan(id) {
+      check(await sb.rpc('pay_loan', { p_id: id, p_month: monthKey(today()), p_on: today() }))
+    },
+    async undoLoanPayment(id) {
+      check(await sb.rpc('undo_loan_payment', { p_id: id, p_month: monthKey(today()) }))
     },
   }
 }

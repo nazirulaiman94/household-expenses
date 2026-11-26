@@ -7,10 +7,11 @@ const LINKS = [
   { to: '/entries', label: 'Entries' },
   { to: '/budgets', label: 'Budgets' },
   { to: '/regular', label: 'Regular items' },
+  { to: '/loans', label: 'Loans' },
   { to: '/savings', label: 'Savings' },
   { to: '/settings', label: 'Settings' },
 ]
-const MORE = ['/budgets', '/regular', '/settings']
+const MORE = ['/budgets', '/regular', '/loans', '/settings']
 
 const ico = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const
 const Icons = {

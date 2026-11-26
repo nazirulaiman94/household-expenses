@@ -1,4 +1,4 @@
-import type { Category, Entry, Goal, Household, Member, NewEntry, Recurring } from './types'
+import type { Category, Entry, Goal, Household, Loan, Member, NewEntry, Recurring } from './types'
 
 export interface Store {
   mode: 'demo' | 'supabase' | 'shared'
@@ -29,6 +29,14 @@ export interface Store {
   goals(): Promise<Goal[]>
   saveGoal(g: Omit<Goal, 'id'> & { id?: string }): Promise<void>
   deleteGoal(id: string): Promise<void>
+
+  loans(): Promise<Loan[]>
+  saveLoan(l: Omit<Loan, 'id' | 'lastPaid' | 'lastEntryId'> & { id?: string }): Promise<void>
+  deleteLoan(id: string): Promise<void>
+  /** Record this month's instalment as an entry, take one month off, and remember it for undo. */
+  payLoan(id: string): Promise<void>
+  /** Undo this month's instalment: remove its entry and add the month back. */
+  undoLoanPayment(id: string): Promise<void>
 }
 
 export const PRESET_CATEGORIES: Omit<Category, 'id'>[] = [

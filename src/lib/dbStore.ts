@@ -1,7 +1,7 @@
-import { advance, today } from './dates'
+import { advance, monthKey, today } from './dates'
 import type { Store } from './store'
 import { PRESET_CATEGORIES } from './store'
-import type { Category, Entry, Goal, Household, Member, Recurring } from './types'
+import type { Category, Entry, Goal, Household, Loan, Member, Recurring } from './types'
 
 /**
  * Store for the claude.ai Artifact build. Data lives in the artifact's shared
@@ -90,6 +90,20 @@ const toGoal = (s: Snap): Goal => {
   const d = s.data() ?? {}
   return { id: s.id, name: str(d.name), target: num(d.target), targetDate: typeof d.targetDate === 'string' ? d.targetDate : null }
 }
+const toLoan = (s: Snap): Loan => {
+  const d = s.data() ?? {}
+  return {
+    id: s.id,
+    name: str(d.name),
+    lender: d.lender === 'bnpl' ? 'bnpl' : 'bank',
+    monthly: num(d.monthly),
+    monthsLeft: Math.max(0, Math.round(num(d.monthsLeft))),
+    dueDay: typeof d.dueDay === 'number' ? d.dueDay : null,
+    categoryId: str(d.categoryId),
+    lastPaid: typeof d.lastPaid === 'string' ? d.lastPaid : null,
+    lastEntryId: typeof d.lastEntryId === 'string' ? d.lastEntryId : null,
+  }
+}
 const byDateDesc = (a: Entry, b: Entry) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)
 const strip = <T extends { id?: string }>(o: T) => {
   const { id: _id, ...rest } = o
@@ -126,9 +140,11 @@ export function createDbStore(db: Db, user: User | null): Store & { setUp(): Pro
     else await db.collection(col).doc().set({ ...strip(o), createdAt: new Date().toISOString() })
   }
 
-  async function addEntryRaw(e: Omit<Entry, 'id' | 'enteredBy'>) {
+  async function addEntryRaw(e: Omit<Entry, 'id' | 'enteredBy'>): Promise<string> {
     await join()
-    await db.collection('entries').doc().set({ ...e, enteredBy: (await getMyId()) ?? '', createdAt: new Date().toISOString() })
+    const ref = db.collection('entries').doc()
+    await ref.set({ ...e, enteredBy: (await getMyId()) ?? '', createdAt: new Date().toISOString() })
+    return ref.id
   }
 
   return {
@@ -213,6 +229,37 @@ export function createDbStore(db: Db, user: User | null): Store & { setUp(): Pro
     async deleteGoal(id) {
       await timed(db.collection('goals').doc(id).delete())
     },
+    async loans() {
+      const snap = await timed(db.collection('loans').get())
+      return snap.docs.map(toLoan).sort((a, b) => a.name.localeCompare(b.name))
+    },
+    async saveLoan(l) {
+      if (l.id) await timed(upsert('loans', l))
+      else await timed(upsert('loans', { ...l, lastPaid: null, lastEntryId: null }))
+    },
+    async deleteLoan(id) {
+      await timed(db.collection('loans').doc(id).delete())
+    },
+    async payLoan(id) {
+      const ref = db.collection('loans').doc(id)
+      const snap = await timed(ref.get())
+      if (!snap.exists) return
+      const l = toLoan(snap)
+      const month = monthKey(today())
+      if (l.lastPaid === month) throw new Error('This month is already marked as paid.')
+      if (l.monthsLeft <= 0) throw new Error('This loan is already paid off.')
+      const entryId = await timed(addEntryRaw({ kind: 'expense', amount: l.monthly, categoryId: l.categoryId, note: `${l.name} instalment`, date: today() }))
+      await timed(ref.update({ monthsLeft: l.monthsLeft - 1, lastPaid: month, lastEntryId: entryId }))
+    },
+    async undoLoanPayment(id) {
+      const ref = db.collection('loans').doc(id)
+      const snap = await timed(ref.get())
+      if (!snap.exists) return
+      const l = toLoan(snap)
+      if (l.lastPaid !== monthKey(today())) return
+      if (l.lastEntryId) await timed(db.collection('entries').doc(l.lastEntryId).delete())
+      await timed(ref.update({ monthsLeft: l.monthsLeft + 1, lastPaid: null, lastEntryId: null }))
+    },
 
     /** First-time setup from a person's click: the household and the preset categories. */
     async setUp() {
@@ -235,7 +282,7 @@ export function createDbStore(db: Db, user: User | null): Store & { setUp(): Pro
         clearTimeout(timer)
         timer = setTimeout(cb, 400)
       }
-      const offs = ['hh', 'categories', 'entries', 'recurring', 'goals'].map((col) => {
+      const offs = ['hh', 'categories', 'entries', 'recurring', 'goals', 'loans'].map((col) => {
         let first = true
         return db.collection(col).onSnapshot(
           () => {
