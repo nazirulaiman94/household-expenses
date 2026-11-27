@@ -530,3 +530,71 @@ input[type="date"]::-webkit-date-and-time-value { line-height: calc(var(--field-
   .loan__nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .loan__actions .btn--primary { flex: 1 1 100%; }
 }
+
+/* Overview: the month at a glance (rolling figures + daily bars) */
+.month-glance { display: grid; gap: var(--space-sm); }
+.month-glance .section-head { margin: 0; }
+.mpanel { display: grid; grid-template-columns: minmax(17rem, 2fr) minmax(0, 3fr); gap: var(--space-md); }
+.mpanel > * { min-width: 0; background: var(--color-cotton); border-radius: calc(var(--radius-card) + 4px); box-shadow: var(--shadow-lift); padding: var(--space-lg); }
+.mpanel__summary { display: grid; gap: var(--space-md); align-content: start; }
+.mpanel__label { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.mpanel__figure { display: block; margin-top: calc(var(--space-sm) * -1); font: 500 clamp(2.2rem, 7vw, 3rem)/1.1 var(--font-outlier); letter-spacing: -0.04em; color: var(--color-ink); }
+.mpanel__figure .roll__small { color: var(--color-muted); font-size: 0.55em; letter-spacing: 0; }
+.mpanel__usage { display: grid; gap: var(--space-2xs); }
+.mpanel__usage-row { display: flex; justify-content: space-between; margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.mpanel__usage-row .num { color: var(--color-success); font-weight: 500; }
+.mpanel__usage-row .num.is-negative { color: var(--color-error); }
+.mpanel__track { display: flex; gap: 2px; height: 10px; border-radius: 3px; overflow: hidden; }
+.mpanel__seg { flex-basis: 0; min-width: 4px; border-radius: 3px; transform-origin: left; animation: mp-grow 700ms var(--ease-out) both; }
+.mpanel__seg--out { background: #257de0; }
+.mpanel__seg--left { background: oklch(80% 0.08 160); animation-delay: 120ms; }
+.mpanel__seg--over { background: repeating-linear-gradient(135deg, var(--color-error) 0 3px, transparent 3px 6px); box-shadow: inset 0 0 0 1px var(--color-error); animation-delay: 240ms; }
+.mpanel__seg--empty { background: var(--color-paper-2); }
+@keyframes mp-grow { from { transform: scaleX(0); } }
+.mpanel__tiles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xs); }
+.mpanel__tile { background: var(--color-paper-2); border-radius: var(--radius-input); padding: var(--space-sm); display: grid; gap: var(--space-2xs); min-width: 0; }
+.mpanel__tile p { margin: 0; font-size: var(--text-sm); color: var(--color-muted); display: flex; align-items: center; gap: 6px; }
+.mpanel__tile .roll { font: 500 var(--text-md)/1.2 var(--font-outlier); color: var(--color-ink); white-space: nowrap; overflow: hidden; }
+.mpanel__add { width: 100%; }
+
+.roll { display: inline-block; white-space: nowrap; }
+.roll > span { display: inline-flex; align-items: baseline; }
+.roll__col { display: inline-block; height: 1em; line-height: 1; overflow: hidden; vertical-align: baseline; }
+.roll__col.roll__small { height: 1em; }
+.roll__strip { display: flex; flex-direction: column; transition: transform 900ms cubic-bezier(0.2, 0.9, 0.25, 1.05); }
+.roll__strip > span { height: 1em; line-height: 1; }
+
+.mchart { display: grid; grid-template-rows: auto 1fr auto; gap: var(--space-sm); min-height: 16rem; }
+.mchart__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); flex-wrap: wrap; }
+.mchart__title { margin: 0; font-size: var(--text-md); }
+.mchart__legend, .mchart__readout { margin: 0; display: flex; gap: var(--space-md); font-size: var(--text-sm); color: var(--color-muted); align-items: center; }
+.mchart__readout { color: var(--color-ink); gap: 6px; }
+.mchart__legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.mchart__key { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.mchart__key--in { background: oklch(72% 0.1 160); }
+.mchart__key--out { background: #257de0; }
+.mchart__plot { position: relative; display: flex; align-items: stretch; gap: 2px; height: 11rem; padding-top: 1.6rem; border-bottom: 1px solid var(--color-rule-2); }
+.mchart__day { flex: 1 1 0; min-width: 0; display: flex; align-items: flex-end; justify-content: center; gap: 1px; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 4px 4px 0 0; -webkit-tap-highlight-color: transparent; position: relative; z-index: 1; }
+.mchart__day.is-picked { background: color-mix(in oklab, var(--color-paper-2) 80%, transparent); }
+.mchart__bar { position: relative; flex: 1 1 0; max-width: 12px; min-height: 0; border-radius: 3px 3px 0 0; transform-origin: bottom; animation: mc-grow 750ms cubic-bezier(0.2, 0.9, 0.25, 1.1) both; }
+.mchart__bar--income { background: oklch(72% 0.1 160); }
+.mchart__bar--spent { background: #257de0; }
+.mchart__bar--none { height: 0; animation: none; }
+.mchart__label { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); font-size: 0.7rem; color: var(--color-ink-2); white-space: nowrap; animation: mc-fade 400ms ease-out both; animation-delay: inherit; }
+@keyframes mc-grow { from { transform: scaleY(0); } }
+@keyframes mc-fade { from { opacity: 0; } }
+.mchart__future { position: absolute; top: 0; bottom: 0; right: 0; background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in oklab, var(--color-paper-3) 45%, transparent) 6px 7px); border-radius: 0 6px 0 0; }
+.mchart__today { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed oklch(62% 0.17 45); z-index: 2; pointer-events: none; }
+.mchart__today span { position: absolute; top: 0; left: 0; transform: translateX(-50%); background: oklch(62% 0.17 45); color: #fff; font-size: 0.7rem; font-weight: 500; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.mchart__axis { position: relative; height: 1.1rem; font-size: var(--text-xs); color: var(--color-muted); }
+.mchart__axis span { position: absolute; transform: translateX(-50%); }
+@media (prefers-reduced-motion: reduce) {
+  .roll__strip { transition: none; }
+  .mchart__bar, .mchart__label, .mpanel__seg { animation: none; }
+}
+@media (max-width: 52rem) { .mpanel { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 40rem) {
+  .mpanel > * { padding: var(--space-md); }
+  .mchart { min-height: 0; }
+  .mchart__plot { height: 9.5rem; }
+}

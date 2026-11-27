@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { DueList } from '../components/DueList'
 import { LineChart } from '../components/LineChart'
+import { MonthPanel } from '../components/MonthPanel'
 import { QuickAdd } from '../components/QuickAdd'
 import { SpendRing } from '../components/SpendRing'
 import { EmptyState, Loaded } from '../components/States'
@@ -96,25 +97,26 @@ export function Overview() {
 
           return (
             <>
-              <section className="sheet" aria-labelledby="sheet-h" ref={sheetRef}>
-                <div className="sheet__head">
+              <section className="month-glance" aria-labelledby="sheet-h" ref={sheetRef}>
+                <div className="section-head">
                   <h2 id="sheet-h">The month so far</h2>
-                  <p className="sheet__date">{month === thisMonth ? `To ${formatDay(today())}` : formatMonth(month)}</p>
+                  <p className="muted">{month === thisMonth ? `To ${formatDay(today())}` : formatMonth(month)}</p>
                 </div>
-                <dl className="figures">
-                  <div>
-                    <dt>Came in</dt>
-                    <dd className="num">{money(t.income, cur)}</dd>
-                  </div>
-                  <div>
-                    <dt>Went out</dt>
-                    <dd className="num">{money(t.spent, cur)}</dd>
-                  </div>
-                  <div className="figures__key">
-                    <dt>Left over</dt>
-                    <dd className={`num${t.saved < 0 ? ' is-negative' : ''}`}>{money(t.saved, cur)}</dd>
-                  </div>
-                </dl>
+                <MonthPanel
+                  entries={monthEntries}
+                  month={month}
+                  currency={cur}
+                  income={t.income}
+                  spent={t.spent}
+                  action={
+                    <button type="button" className="btn btn--primary mpanel__add hide-s" onClick={() => setAdding(true)}>
+                      Add entry
+                    </button>
+                  }
+                />
+              </section>
+
+              <section className="sheet" aria-label={`Spending in ${formatMonth(month)}`}>
 
                 {monthEntries.length === 0 ? (
                   <EmptyState
