@@ -10,9 +10,9 @@ npm install
 npm run dev
 ```
 
-With no Supabase keys set, the app runs on **sample data kept in your browser**,
-so you can click through everything straight away. Settings has buttons to
-restore the sample data or clear it.
+With no Supabase keys set, the app keeps entries **in your browser** and starts empty,
+so you can try it straight away. Settings can load a year of sample data
+to see the pages full, or clear everything.
 
 ## Connect Supabase (real data, two logins)
 
@@ -43,4 +43,4 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the Netlify site setting
 Not built yet: the reminder and budget **emails** (a scheduled Supabase
 function plus an email service). The in-site reminders work now.
 
-Design: Hallmark, Almanac theme. Tokens in `src/tokens.css`, screen styles in `src/app.css`.
+Design: Hallmark, Dose theme. Tokens in `src/tokens.css`, screen styles in `src/app.css`.

@@ -1,0 +1,75 @@
+[
+ {
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "dose",
+  "axes": "light/grotesk-sans/chromatic-green",
+  "hero": "none",
+  "nav": "top bar",
+  "footer": "none",
+  "imagery": "none",
+  "photos": [],
+  "entry": "home",
+  "fingerprint": "home-entry+statement-sheet",
+  "sections": [
+   "home entry form",
+   "month statement",
+   "reminders",
+   "trend",
+   "where it went"
+  ],
+  "signature": "the month statement lifted off warm paper",
+  "waived": [],
+  "prompt": "household money app, different theme",
+  "date": "2026-11-26",
+  "mode": "build"
+ },
+ {
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "coral",
+  "axes": "light/grotesk-sans/warm",
+  "hero": "none",
+  "nav": "top bar",
+  "footer": "none",
+  "imagery": "none",
+  "photos": [],
+  "entry": "overview",
+  "fingerprint": "statement-sheet+trend-chart",
+  "sections": [
+   "due list",
+   "month statement",
+   "trend",
+   "where it went"
+  ],
+  "signature": "the month statement on cotton stock",
+  "waived": [],
+  "prompt": "household finance app, clean and modern",
+  "date": "2026-11-26",
+  "mode": "build"
+ },
+ {
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "almanac",
+  "axes": "mid/grotesk-sans/chromatic-magenta",
+  "hero": "none",
+  "nav": "top bar",
+  "footer": "none",
+  "imagery": "none",
+  "photos": [],
+  "entry": "overview",
+  "fingerprint": "month-sheet+trend-chart",
+  "sections": [
+   "due list",
+   "month sheet",
+   "trend",
+   "where it went"
+  ],
+  "signature": "the month sheet",
+  "waived": [],
+  "prompt": "household expense tracker dashboard",
+  "date": "2026-11-26",
+  "mode": "build"
+ }
+]
