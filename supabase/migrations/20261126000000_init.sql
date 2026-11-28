@@ -4,7 +4,7 @@
 
 create table public.households (
   id uuid primary key default gen_random_uuid(),
-  name text not null default 'Our household',
+  name text not null default 'Household',
   currency text not null default 'MYR' check (char_length(currency) = 3),
   opening_balance numeric(14,2) not null default 0,
   invite_code text unique default substr(md5(gen_random_uuid()::text), 1, 8),
@@ -101,7 +101,7 @@ returns uuid language plpgsql security definer set search_path = public as $$
 declare hid uuid;
 begin
   if auth.uid() is null then raise exception 'not signed in'; end if;
-  insert into households(name, currency) values (coalesce(nullif(p_name,''), 'Our household'), p_currency) returning id into hid;
+  insert into households(name, currency) values (coalesce(nullif(p_name,''), 'Household'), p_currency) returning id into hid;
   insert into household_members(household_id, user_id, display_name, email)
     values (hid, auth.uid(), p_display_name, (select email from auth.users where id = auth.uid()));
   insert into categories(household_id, name, kind) values

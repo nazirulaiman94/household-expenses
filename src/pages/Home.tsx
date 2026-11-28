@@ -20,8 +20,9 @@ export function Home() {
   const [params, setParams] = useSearchParams()
   const thisMonth = monthKey(today())
   const lastMonth = addMonths(thisMonth, -1)
+  const nextMonth = addMonths(thisMonth, 1)
   const raw = params.get('m') ?? ''
-  const month = /^\d{4}-\d{2}$/.test(raw) && raw <= thisMonth ? raw : thisMonth
+  const month = /^\d{4}-\d{2}$/.test(raw) && raw <= nextMonth ? raw : thisMonth
   const pick = (m: string) => setParams(m === thisMonth ? {} : { m }, { replace: true })
   const overviewHref = month === thisMonth ? '/overview' : `/overview?m=${month}`
 
@@ -65,17 +66,20 @@ export function Home() {
 
       <div className="home__month">
         <div className="tabs" role="group" aria-label="Month">
+          <button type="button" className="tab" aria-pressed={month === lastMonth} onClick={() => pick(lastMonth)}>
+            Last month
+          </button>
           <button type="button" className="tab" aria-pressed={month === thisMonth} onClick={() => pick(thisMonth)}>
             This month
           </button>
-          <button type="button" className="tab" aria-pressed={month === lastMonth} onClick={() => pick(lastMonth)}>
-            Last month
+          <button type="button" className="tab" aria-pressed={month === nextMonth} onClick={() => pick(nextMonth)}>
+            Next month
           </button>
         </div>
         <div className="field home__month-select">
           <label htmlFor="home-month">Or choose a month</label>
           <select id="home-month" value={month} onChange={(e) => pick(e.target.value)}>
-            {Array.from({ length: 24 }, (_, i) => addMonths(thisMonth, -i)).map((m) => (
+            {Array.from({ length: 25 }, (_, i) => addMonths(nextMonth, -i)).map((m) => (
               <option key={m} value={m}>{formatMonth(m)}</option>
             ))}
           </select>

@@ -108,7 +108,7 @@ export function seedState(): DemoState {
   ]
 
   return {
-    household: { id: 'demo', name: 'Our household', currency: 'MYR', openingBalance: 5000, inviteCode: null, members },
+    household: { id: 'demo', name: 'Household', currency: 'MYR', openingBalance: 5000, inviteCode: null, members },
     categories,
     entries,
     recurring,

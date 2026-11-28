@@ -70,7 +70,7 @@ export function Entries() {
         <div className="field">
           <label htmlFor="f-month">Month</label>
           <select id="f-month" value={month} onChange={(e) => set('m', e.target.value === thisMonth ? '' : e.target.value)}>
-            {Array.from({ length: 24 }, (_, i) => addMonths(thisMonth, -i)).map((m) => (
+            {Array.from({ length: 25 }, (_, i) => addMonths(thisMonth, 1 - i)).map((m) => (
               <option key={m} value={m}>{formatMonth(m)}</option>
             ))}
           </select>

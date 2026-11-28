@@ -598,3 +598,12 @@ input[type="date"]::-webkit-date-and-time-value { line-height: calc(var(--field-
   .mchart { min-height: 0; }
   .mchart__plot { height: 9.5rem; }
 }
+
+/* Homepage month picker: tabs and the month box share one height */
+.home__month .tabs { height: var(--field-h); box-sizing: border-box; align-items: stretch; }
+.home__month .tab { min-height: 0; height: 100%; font-size: var(--text-md); }
+@media (max-width: 40rem) {
+  .home__month .tabs { width: 100%; }
+  .home__month .tab { flex: 1 1 0; justify-content: center; padding-inline: var(--space-xs); }
+  .home__month-select { flex: 1 1 100%; }
+}

@@ -10,7 +10,8 @@ export function QuickAdd({ onClose, onSaved, month, title = 'New entry' }: { onC
   const { store, categories, household, changed } = useApp()
   // With a month chosen, the date defaults inside it: today for this month, else its last day.
   const range = month ? monthRange(month) : null
-  const defaultDate = !month || month === monthKey(today()) ? today() : range!.to
+  const future = !!month && month > monthKey(today())
+  const defaultDate = !month || month === monthKey(today()) ? today() : future ? range!.from : range!.to
   const id = useId()
   const amountRef = useRef<HTMLInputElement>(null)
   const [kind, setKind] = useState<Kind>('expense')
@@ -116,7 +117,7 @@ export function QuickAdd({ onClose, onSaved, month, title = 'New entry' }: { onC
         </div>
         <div className="field">
           <label htmlFor={`${id}-date`}>Date</label>
-          <input id={`${id}-date`} name="date" type="date" defaultValue={defaultDate} min={range?.from} max={range ? (range.to < today() ? range.to : today()) : today()} />
+          <input id={`${id}-date`} name="date" type="date" defaultValue={defaultDate} min={range?.from} max={range ? (future || range.to < today() ? range.to : today()) : today()} />
           <p className="field__help" />
         </div>
         <div className="field field--wide">

@@ -47,7 +47,7 @@ export function Overview() {
             <span className="hide-s">Previous</span>
           </button>
           <h1>{formatMonth(month)}</h1>
-          <button type="button" className="btn btn--quiet btn--small" onClick={() => go(addMonths(month, 1))} disabled={month >= thisMonth} aria-label="Next month">
+          <button type="button" className="btn btn--quiet btn--small" onClick={() => go(addMonths(month, 1))} disabled={month >= addMonths(thisMonth, 1)} aria-label="Next month">
             <span className="hide-s">Next</span>
             <span aria-hidden="true" className="month-nav__arrow">›</span>
           </button>

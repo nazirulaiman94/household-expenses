@@ -15,7 +15,7 @@ export function Settings() {
     const opening = Number(String(d.get('opening')).replace(/,/g, '') || 0)
     if (!Number.isFinite(opening)) return setStatus({ tone: 'error', text: 'Savings at the start must be a number.' })
     try {
-      await store.updateHousehold({ name: String(d.get('name')).trim() || 'Our household', currency: String(d.get('currency')), openingBalance: opening })
+      await store.updateHousehold({ name: String(d.get('name')).trim() || 'Household', currency: String(d.get('currency')), openingBalance: opening })
       setStatus({ tone: 'ok', text: 'Saved.' })
       changed()
     } catch (e) {

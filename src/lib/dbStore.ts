@@ -159,7 +159,7 @@ export function createDbStore(db: Db, user: User | null): Store & { setUp(): Pro
       const [snap, ms] = await timed(Promise.all([db.doc('hh/main').get(), members()]))
       if (!snap.exists) throw new SetupNeededError()
       const d = snap.data() ?? {}
-      return { id: 'main', name: str(d.name, 'Our household'), currency: str(d.currency, 'MYR'), openingBalance: num(d.openingBalance), inviteCode: null, members: ms }
+      return { id: 'main', name: str(d.name, 'Household'), currency: str(d.currency, 'MYR'), openingBalance: num(d.openingBalance), inviteCode: null, members: ms }
     },
     async updateHousehold(patch) {
       await join()
@@ -270,7 +270,7 @@ export function createDbStore(db: Db, user: User | null): Store & { setUp(): Pro
           if (!existing.docs.length) {
             for (const [i, c] of PRESET_CATEGORIES.entries()) await db.collection('categories').doc().set({ ...c, order: i + 1 })
           }
-          await db.doc('hh/main').set({ name: 'Our household', currency: 'MYR', openingBalance: 0 })
+          await db.doc('hh/main').set({ name: 'Household', currency: 'MYR', openingBalance: 0 })
         })(),
       )
     },

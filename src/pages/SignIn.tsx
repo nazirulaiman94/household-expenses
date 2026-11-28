@@ -78,7 +78,7 @@ export function Setup({ sb, onDone }: { sb: SupabaseClient; onDone: () => void }
           <>
             <div className="field">
               <label htmlFor="hname">Household name</label>
-              <input id="hname" name="name" placeholder="Our household" autoComplete="off" />
+              <input id="hname" name="name" placeholder="Household" autoComplete="off" />
             </div>
             <div className="field">
               <label htmlFor="hcur">Currency</label>
